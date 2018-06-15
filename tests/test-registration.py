@@ -59,6 +59,7 @@ class UserRegistrationTestCase(unittest.TestCase):
                                     )
         response = json.loads(register.data.decode())
         self.assertEqual(response["message"], "Username not provided")
+        self.assertEqual(register.status_code, 400)
 
     def test_user_registration_with_empty_string_username(self):
         """Test for appropriate response message for registration with empty string username"""
@@ -66,6 +67,7 @@ class UserRegistrationTestCase(unittest.TestCase):
                                     content_type=("application/json"))
         response = json.loads(register.data.decode())
         self.assertEqual(response["message"], "Username cannot be empty")
+        self.assertEqual(register.status_code,400)
 
     def test_user_registration_without_email(self):
         """Test reponse message for user registration without email"""
@@ -88,6 +90,7 @@ class UserRegistrationTestCase(unittest.TestCase):
                                     content_type=("application/json"))
         response = json.loads(register.data.decode())
         self.assertEqual(response["message"], "Password must be provided")
+        self.assertEqual(register.status_code, 400)
 
     def test_user_registration_with_empty_string_password(self):
         """Test for approprate response for user registration with empty string password"""
@@ -95,6 +98,7 @@ class UserRegistrationTestCase(unittest.TestCase):
                                     content_type=("application/json"))
         response = json.loads(register.data.decode())
         self.assertEqual(response["message"], "Password field cannot be empty")
+        self.assertEqual(register.status_code, 400)
 
     def test_user_registration_with_existing_username(self):
         """Test for user registration with already existing email"""
@@ -104,15 +108,25 @@ class UserRegistrationTestCase(unittest.TestCase):
                                         content_type=("application/json"))
         response = json.loads(register_two.data.decode())
         self.assertEqual(response["message"], "Username already exists")
+        self.assertEqual(register_two.status_code, 400)
 
     def test_user_registration_with_existing_email(self):
         """Test response message for registration with already existing email"""
-        register = self.client.post(
-            "api/v1/users/", data=json.dumps(self.data), content_type=("application/json"))
+        register = self.client.post("api/v1/users/", data=json.dumps(self.data),
+                                    content_type=("application/json"))
         register_two = self.client.post("api/v1/users/", data=json.dumps(dict(username="different name", email="email@gmail.com", password="1234")),
                                         content_type=("application/json"))
         response = json.loads(register_two.data.decode())
         self.assertEqual(response["message"], "Email already exists")
+        self.assertEqual(register_two.status_code, 400)
+
+    def test_user_registration_with_invalid_email(self):
+        """test response message for registration with invalid email"""
+        register = self.client.post("api/v1/users/", data=json.dumps(dict(username="name", email="email", password="1234")),
+                                    content_type=("application/json"))
+        response = json.loads(register.data.decode())
+        self.assertEqual(response["message"], "Invalid email")
+        self.assertEqual(register.status_code, 400)
 
         if __name__ == "__main__":
             unittest.main()

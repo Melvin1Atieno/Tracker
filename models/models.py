@@ -6,3 +6,4 @@ class User:
         self.email = email
         self.password = password
         self.admin = admin
+              

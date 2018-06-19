@@ -1,14 +1,16 @@
 import unittest
 import os
 import json
-from app import create_app
+from app import app
+from flask import Flask
 
 
 class UserRegistrationTestCase(unittest.TestCase):
     """Test cases for user registration"""
 
     def setUp(self):
-        self.app = create_app(config_name="testing")
+        self.app = Flask(__name__)
+        self.app.config['TESTING'] = True
         self.client = self.app.test_client()
         self.data = {
             "username": "melvin",
@@ -22,14 +24,9 @@ class UserRegistrationTestCase(unittest.TestCase):
                                     content_type=("application/json")
                                     )
         self.assertEqual(register.status_code, 201)
-
-    def test_new_user_successful_registeration_response_message(self):
-        """Test that a user can register if they provide details"""
-        register = self.client.post("api/v1/users/", data=json.dumps(self.data),
-                                    content_type=("application/json")
-                                    )
         response = json.loads(register.data.decode())
         self.assertEqual(response["message"], "Registration Successful")
+
 
     def test_existing_user_registration_status_code(self):
         """Test the status code for registration of existing user"""

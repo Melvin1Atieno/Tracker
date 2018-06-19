@@ -13,6 +13,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
 
 
+
 class TestingConfig(Config):
     """Configurations for testing"""
     TESTING = True

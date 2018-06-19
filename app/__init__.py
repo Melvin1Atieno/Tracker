@@ -32,7 +32,6 @@ def create_app(config_name):
 
 
 
-        # import pdb; pdb.set_trace()
     @app.route("/api/v1/users", methods=["POST"])
     def create_user():
         data = request.get_json()
@@ -66,6 +65,7 @@ def create_app(config_name):
         
         new_user = User(username,email,password)
         users_catalog.append({"username":new_user.username,"email":new_user.email,"password":new_user.password})
+        # import pdb; pdb.set_trace()
         return make_response(jsonify({"message": "Registration Successful"}),201)
         
         

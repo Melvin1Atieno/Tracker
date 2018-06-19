@@ -2,7 +2,6 @@ import unittest
 import os
 import json
 from app import create_app
-from flask import Flask
 
 
 class UserRegistrationTestCase(unittest.TestCase):
